@@ -1,27 +1,33 @@
 print("Hello, Git!")
 from netmiko import ConnectHandler
 
-def acces_netmiko():
-    router = {
-        "device_type": "cisco_xr",
-        "host": "sandbox-iosxr-1.cisco.com",
-        "username": "admin",
-        "password": "C1sco12345",
-        "port": 22,
-    }
+device = {
+    "device_type": "cisco_ios",
+    "host": "sandbox-iosxr-1.cisco.com",
+    "username": "admin",
+    "password": "C1sco12345",
+    "port": 22,
+}
 
-    connexion = ConnectHandler(**router)
+def main():
+    connexion = ConnectHandler(**device)
 
-    # Affiche la date côté routeur
-    clock = connexion.send_command("show clock")
-    print(clock)
+    # 1) show clock
+    print("=== DATE DU ROUTEUR ===")
+    print(connexion.send_command("show clock"))
 
-    # Affiche les interfaces et les sauvegarde dans un fichier
-    interfaces = connexion.send_command("show interfaces")
+    # 2) Save interfaces
+    print("\n=== SAUVEGARDE DES INTERFACES ===")
+    interfaces = connexion.send_command("show ip interface brief")
+    print(f"\n {interfaces}")
     with open("interfaces.txt", "w") as f:
         f.write(interfaces)
+    print("Interfaces enregistrées dans interfaces.txt")
 
-    connexion.disconnect()
+if __name__ == "__main__":
+    main()
+
+
 
 print("Hello, Git!")
 
@@ -29,3 +35,4 @@ def dire_salut():
     print("Salut, Git!")
 
 dire_salut()
+
